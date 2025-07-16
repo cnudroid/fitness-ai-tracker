@@ -1,0 +1,65 @@
+[
+  {
+    "username": "Karun",
+    "workout": "Running ",
+    "duration": "10",
+    "calories": 600,
+    "timestamp": 1752703213457
+  },
+  {
+    "username": "Karun",
+    "workout": "ThreadMill",
+    "duration": "30",
+    "calories": 240,
+    "timestamp": 1752703453368
+  },
+  {
+    "username": "Karun",
+    "workout": "Swimming",
+    "duration": "15",
+    "calories": 200,
+    "timestamp": 1752703639323
+  },
+  {
+    "username": "Karun",
+    "workout": "walking",
+    "duration": "30",
+    "calories": 210,
+    "timestamp": 1752703963089
+  },
+  {
+    "username": "Karun",
+    "workout": "full body workout",
+    "duration": "30",
+    "calories": 30,
+    "timestamp": 1752704016918
+  },
+  {
+    "username": "Karun",
+    "workout": "elliptical",
+    "duration": "30",
+    "calories": 30,
+    "timestamp": 1752704093323
+  },
+  {
+    "username": "Karun",
+    "workout": "indoor cycling",
+    "duration": "30",
+    "calories": 30,
+    "timestamp": 1752704118332
+  },
+  {
+    "username": "Karun",
+    "workout": "Cardio and Core Workout",
+    "duration": "45",
+    "calories": 200,
+    "timestamp": 1752704158011
+  },
+  {
+    "username": "Srinivas",
+    "workout": "Running ",
+    "duration": "10",
+    "calories": 154,
+    "timestamp": 1752704782031
+  }
+]

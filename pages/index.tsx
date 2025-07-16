@@ -18,10 +18,10 @@ export default function Home() {
   const [username, setUsername] = React.useState("");
   const [workout, setWorkout] = React.useState("");
   const [duration, setDuration] = React.useState("");
-  const [result, setResult] = React.useState<any>(null);
+  const [result, setResult] = React.useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
-  const [history, setHistory] = React.useState<any[]>([]);
+  const [history, setHistory] = React.useState<Record<string, unknown>[]>([]);
   const [ollamaPrompt, setOllamaPrompt] = React.useState("");
   const [ollamaResponse, setOllamaResponse] = React.useState<string | null>(null);
   const [ollamaLoading, setOllamaLoading] = React.useState(false);

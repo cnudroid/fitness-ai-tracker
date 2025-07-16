@@ -51,8 +51,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const aiMessage = data.response?.trim();
       return res.status(200).json({ response: aiMessage });
     }
-  } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to get AI response', details: err.message });
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return res.status(500).json({ error: 'Failed to get AI response', details: err.message });
+    }
+    return res.status(500).json({ error: 'Failed to get AI response', details: String(err) });
   }
 }
 

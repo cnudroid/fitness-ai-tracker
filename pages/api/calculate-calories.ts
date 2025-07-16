@@ -77,7 +77,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     workouts.push(workoutEntry);
     await fs.writeFile(WORKOUTS_FILE, JSON.stringify(workouts, null, 2), 'utf8');
     return res.status(200).json(workoutEntry);
-  } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to estimate calories', details: err.message });
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return res.status(500).json({ error: 'Failed to estimate calories', details: err.message });
+    }
+    return res.status(500).json({ error: 'Failed to estimate calories', details: String(err) });
   }
 }

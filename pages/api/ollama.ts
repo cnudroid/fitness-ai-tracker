@@ -37,7 +37,10 @@ export default async function handler(
 
     const data = await ollamaRes.json();
     return res.status(200).json({ response: data.response });
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message || "Unknown error" });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return res.status(500).json({ error: error.message || "Unknown error" });
+    }
+    return res.status(500).json({ error: String(error) });
   }
 }

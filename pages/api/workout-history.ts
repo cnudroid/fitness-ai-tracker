@@ -23,7 +23,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     const history = workouts.filter(w => w.username === username);
     return res.status(200).json({ history });
-  } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch workout history', details: err.message });
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return res.status(500).json({ error: 'Failed to fetch workout history', details: err.message });
+    }
+    return res.status(500).json({ error: 'Failed to fetch workout history', details: String(err) });
   }
 }

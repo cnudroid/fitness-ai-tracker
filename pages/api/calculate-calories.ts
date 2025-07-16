@@ -1,5 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+type WorkoutEntry = {
+  username: string;
+  workout: string;
+  duration: string;
+  calories: number | string;
+  timestamp: number;
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -66,11 +74,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const fs = await import('fs/promises');
     const path = await import('path');
     const WORKOUTS_FILE = path.join(process.cwd(), 'workouts.json');
-    let workouts: any[] = [];
+    let workouts: WorkoutEntry[] = [];
     try {
       const data = await fs.readFile(WORKOUTS_FILE, 'utf8');
-      workouts = JSON.parse(data);
-    } catch (err) {
+      workouts = JSON.parse(data) as WorkoutEntry[];
+    } catch {
       // File may not exist yet
       workouts = [];
     }
@@ -80,7 +88,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (err: unknown) {
     if (err instanceof Error) {
       return res.status(500).json({ error: 'Failed to estimate calories', details: err.message });
+    } else if (typeof err === 'string') {
+      return res.status(500).json({ error: 'Failed to estimate calories', details: err });
+    } else {
+      return res.status(500).json({ error: 'Failed to estimate calories', details: String(err) });
     }
-    return res.status(500).json({ error: 'Failed to estimate calories', details: String(err) });
   }
 }

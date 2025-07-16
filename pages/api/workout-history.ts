@@ -2,6 +2,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { promises as fs } from 'fs';
 import path from 'path';
 
+type WorkoutEntry = {
+  username: string;
+  workout: string;
+  duration: string;
+  calories: number | string;
+  timestamp: number;
+};
+
 const WORKOUTS_FILE = path.join(process.cwd(), 'workouts.json');
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -13,11 +21,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Username is required' });
   }
   try {
-    let workouts: any[] = [];
+    let workouts: WorkoutEntry[] = [];
     try {
       const data = await fs.readFile(WORKOUTS_FILE, 'utf8');
-      workouts = JSON.parse(data);
-    } catch (err) {
+      workouts = JSON.parse(data) as WorkoutEntry[];
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('Error reading workouts file:', err.message);
+      } else {
+        console.error('Unknown error reading workouts file:', String(err));
+      }
       // File may not exist yet
       workouts = [];
     }

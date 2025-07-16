@@ -1,18 +1,4 @@
-import Head from "next/head";
 import React from "react";
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
-import styles from "@/styles/Home.module.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export default function Home() {
   const [username, setUsername] = React.useState("");
@@ -25,7 +11,7 @@ export default function Home() {
   const [ollamaPrompt, setOllamaPrompt] = React.useState("");
   const [ollamaResponse, setOllamaResponse] = React.useState<string | null>(null);
   const [ollamaLoading, setOllamaLoading] = React.useState(false);
-  const [ollamaError, setOllamaError] = React.useState("");
+  
   const [aiProvider, setAiProvider] = React.useState<string>(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('ai-provider') || 'ollama';
@@ -72,8 +58,12 @@ export default function Home() {
       setResult(data);
       // Refresh history after logging
       if (username) fetchHistory(username);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+     if (err instanceof Error) {
+       setError(err.message);
+     } else {
+       setError('An unknown error occurred');
+     }
     } finally {
       setLoading(false);
     }
@@ -191,16 +181,16 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody>
-                {history.map((item, idx) => (
+                {history.map((item: Record<string, unknown>, idx: number) => (
                   <tr key={idx} style={{
                     borderBottom: '1px solid #eee',
                     background: idx % 2 === 0 ? '#fff' : '#f7fafc',
                     color: '#222'
                   }}>
-                    <td style={{ padding: '12px 10px', borderRight: '1.5px solid #e5e7eb', borderBottom: '1px solid #e5e7eb', wordBreak: 'break-word' }}>{item.workout}</td>
-                    <td style={{ padding: '12px 10px', borderRight: '1.5px solid #e5e7eb', borderBottom: '1px solid #e5e7eb', wordBreak: 'break-word' }}>{item.duration}</td>
-                    <td style={{ padding: '12px 10px', borderRight: '1.5px solid #e5e7eb', borderBottom: '1px solid #e5e7eb', wordBreak: 'break-word' }}>{item.calories}</td>
-                    <td style={{ padding: '12px 10px', borderBottom: '1px solid #e5e7eb', wordBreak: 'break-word' }}>{item.timestamp ? new Date(item.timestamp).toLocaleString() : ''}</td>
+                    <td style={{ padding: '12px 10px', borderRight: '1.5px solid #e5e7eb', borderBottom: '1px solid #e5e7eb', wordBreak: 'break-word' }}>{typeof item.workout === "string" || typeof item.workout === "number" ? item.workout : JSON.stringify(item.workout)}</td>
+                    <td style={{ padding: '12px 10px', borderRight: '1.5px solid #e5e7eb', borderBottom: '1px solid #e5e7eb', wordBreak: 'break-word' }}>{typeof item.duration === "string" || typeof item.duration === "number" ? item.duration : JSON.stringify(item.duration)}</td>
+                    <td style={{ padding: '12px 10px', borderRight: '1.5px solid #e5e7eb', borderBottom: '1px solid #e5e7eb', wordBreak: 'break-word' }}>{typeof item.calories === "string" || typeof item.calories === "number" ? item.calories : JSON.stringify(item.calories)}</td>
+                    <td style={{ padding: '12px 10px', borderBottom: '1px solid #e5e7eb', wordBreak: 'break-word' }}>{typeof item.timestamp === "number" || typeof item.timestamp === "string" ? new Date(item.timestamp).toLocaleString() : JSON.stringify(item.timestamp)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -235,8 +225,12 @@ export default function Home() {
               });
               const data = await res.json();
               setOllamaResponse(data.response);
-            } catch (err) {
-              setOllamaResponse("Error: " + (err as any)?.message);
+            } catch (err: unknown) {
+              if (err instanceof Error) {
+                setOllamaResponse("Error: " + err.message);
+              } else {
+                setOllamaResponse("Error: " + String(err));
+              }
             } finally {
               setOllamaLoading(false);
             }
